@@ -1,0 +1,15 @@
+﻿@typeparam TItem
+<table class="table-borderless table table-dark">
+	<thead>
+		<tr>@Header</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Items)
+		{
+			<tr>@Row(item)</tr>
+		}
+	</tbody>
+	<tfoot>
+		<tr>@Footer</tr>
+	</tfoot>
+</table>
