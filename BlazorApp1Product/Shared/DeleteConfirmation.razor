@@ -1,0 +1,25 @@
+﻿@typeparam ModelType
+
+<h3>Delete Confirmation</h3>
+
+
+
+
+
+
+@code {
+
+
+
+	[Parameter]
+	public ModelType Model { get; set; }
+
+	[Parameter]
+	public EventCallback<bool> Success { get; set; }
+
+
+
+
+
+
+}

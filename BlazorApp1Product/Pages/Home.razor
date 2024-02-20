@@ -1,0 +1,52 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+@* <Grid Items="People" TItem="Person" >
+	<Header>
+	<th>ID</th>
+	<th>Name</th>
+	<th>Age</th>
+	</Header>
+	<Row>
+		<!-- by default called context -->
+		<td>@context.PersonId</td>
+		<td>@context.PersonName</td>
+		<td>@context.Age</td>
+	</Row> 
+	<Footer>
+	<td colspan="2">Total record : @People.Count()</td>
+	</Footer>
+</Grid>
+
+@code{
+
+
+	List<Person> People= new List<Person>();
+
+	protected override void OnInitialized()
+	{
+		People.Add(new Person { PersonId = 1, PersonName = "person 1", Age = 20 });
+		People.Add(new Person { PersonId = 2, PersonName = "person 2", Age = 20 });
+		People.Add(new Person { PersonId = 3, PersonName = "person 3", Age = 20 });
+		People.Add(new Person { PersonId = 4, PersonName = "person 4", Age = 20 });
+		People.Add(new Person { PersonId = 5, PersonName = "person 5", Age = 20 });
+		People.Add(new Person { PersonId = 6, PersonName = "person 6", Age = 20 });
+	}
+
+
+
+
+
+
+	public class Person
+	{
+		public int PersonId { get; set; }
+		public string PersonName { get; set; }
+		public int Age { get; set; }
+	}
+
+} *@

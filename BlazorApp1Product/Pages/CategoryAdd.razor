@@ -1,0 +1,150 @@
+﻿@page "/add"
+@inject ProductCategoryService service
+@inject NavigationManager nav
+@using System.Net.Http.Headers
+
+<h3>CategoryAdd</h3>
+
+
+<form @onsubmit="SaveData">
+	@if (!string.IsNullOrEmpty(message))
+	{
+		<span class="text-danger text-lg-center">@message</span>
+	}
+	@* <div>
+	<label for="name">Name:</label>
+	<input id="name" class="form-control" required  @bind="model.Name"/>
+	</div> *@
+
+	<div>
+		<InputText class="form-control" @bind-Value="@model.Name"></InputText>
+	</div>
+	<div>
+		<InputFile class="form-control" accept="image/jpg,image/png, image/jpeg" OnChange="UserFileSelected"  />
+
+
+		@if (ImgUrl != null)
+		{
+			<div>
+				<img src="@ImgUrl" style="width:300px" />
+			</div>
+		}
+	</div>
+	<table class="table table-active table-bordered table-hover">
+		<tr>
+			<th>Product Name</th>
+			<th>Product Number</th>
+			<th>Product Color</th>
+			<th>
+				<button type="button" class="btn btn-outline-info" @onclick="AddProduct">Add Product</button>
+			</th>
+		</tr>
+
+		@foreach (var prod in model.Products)
+		{
+			<tr>
+				<td>
+					<input @bind="prod.Name" />
+				</td>
+				<td>
+					<input @bind="prod.ProductNumber" />
+				</td>
+				<td>
+					<input @bind="prod.Color" />
+				</td>
+				<td>
+					<button type="button" class="btn btn-outline-warning" @onclick="()=> DeleteProduct(prod)">Delete</button>
+				</td>
+			</tr>
+
+
+		}
+	</table>
+
+	<button type="submit" class="btn btn-outline-success">
+		Save
+	</button>
+	<NavLink class="btn btn-outline-info" href="cat">
+		Cancel
+	</NavLink>
+</form>
+
+
+
+
+
+@code {
+
+
+	string? ImgUrl = null;
+
+
+	private async Task UserFileSelected(InputFileChangeEventArgs e)
+	{
+		var imageFile = e.File;
+
+		if (imageFile != null)
+		{
+			//var resizedFile = await imageFile.RequestImageFileAsync(imageFile.ContentType, 300, 500);
+
+			using (Stream stream = imageFile.OpenReadStream(imageFile.Size))
+			{
+
+				MemoryStream ms = new MemoryStream();
+
+				await stream.CopyToAsync(ms);
+
+				byte[] bytes = ms.ToArray();
+
+				string base64 = Convert.ToBase64String(bytes);
+
+				model.ImageData = new ImageData(imageFile.Name, imageFile.ContentType, base64);
+
+				ImgUrl = $"data:{imageFile.ContentType};base64, {base64}";
+
+				//model.ImagePath = $"data:{imageFile.ContentType};base64, {base64}";
+
+				// model.ImageData = ImgUrl;
+
+			}
+		}
+
+	}
+
+
+
+
+
+
+	private ProductCategory model = new ProductCategory();
+	int index = 0;
+
+
+	string? message;
+
+	public async Task SaveData()
+	{
+		var response = await service.SaveProductCategory(model);
+
+		if (response.IsSuccessStatusCode)
+		{
+			nav.NavigateTo("/cat");
+		}
+		else
+		{
+			this.message = response.ReasonPhrase;
+			//response.Content
+		}
+	}
+
+	void AddProduct()
+	{
+		model.Products.Add(new Product());
+	}
+	void DeleteProduct(Product item)
+	{
+		model.Products.Remove(item);
+
+	}
+
+}
